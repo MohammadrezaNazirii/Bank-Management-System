@@ -1,0 +1,62 @@
+-- User Table
+CREATE TABLE Users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    createdAt VARCHAR(255),
+    firstName VARCHAR(255),
+    lastName VARCHAR(255),
+    birthDate VARCHAR(255),
+    phoneNumber VARCHAR(20),
+    role VARCHAR(50) DEFAULT 'user' CHECK (role IN ('admin', 'employee', 'user'))
+);
+
+-- Account Table
+CREATE TABLE Account (
+    accountNumber SERIAL PRIMARY KEY,
+    balance DECIMAL(15, 2) DEFAULT 0.0,
+    name VARCHAR(255),
+    userId INT REFERENCES Users(id),
+    createdAt VARCHAR(255)
+);
+
+-- Transaction Table
+CREATE TABLE Transaction (
+    id SERIAL PRIMARY KEY,
+    accountId INT REFERENCES Account(accountNumber),
+    transactionType VARCHAR(10) CHECK (transactionType IN ('deposit', 'withdrawal')),
+    amount DECIMAL(15, 2) NOT NULL,
+    transactionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Loan Table
+CREATE TABLE Loan (
+    id SERIAL PRIMARY KEY,
+    userId INT REFERENCES Users(id),
+    amount DECIMAL(15, 2) NOT NULL,
+    interestRate DECIMAL(5, 2) DEFAULT 0.0,
+    termMonths INT DEFAULT 12,
+    status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'paid')),
+    createdAt VARCHAR(255)
+);
+
+-- LoanInstallment Table
+CREATE TABLE LoanInstallment (
+    id SERIAL PRIMARY KEY,
+    loanId INT REFERENCES Loan(id),
+    installmentNumber INT NOT NULL,
+    dueDate DATE NOT NULL,
+    amount DECIMAL(15, 2) NOT NULL,
+    status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'paid'))
+);
+
+CREATE TABLE request (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    status VARCHAR(50)  NOT NULL
+);
+ALTER TABLE request
+ADD COLUMN accountnumber VARCHAR(255); -- Change the data type and size accordingly
+
+
